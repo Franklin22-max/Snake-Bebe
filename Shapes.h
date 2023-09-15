@@ -107,6 +107,16 @@ inline double get_lenght(vec2 U)
 	return sqrt(U.x * U.x + U.y * U.y);
 }
 
+inline vec2 rotate_vector(vec2 center, vec2 peak, double angle_rads)
+{
+	vec2 U = peak - center, T;
+
+	T.x = U.x * cos(angle_rads) + U.y * sin(angle_rads);
+	T.y = U.x * -sin(angle_rads) + U.y * cos(angle_rads);
+
+	return (T + center);
+}
+
 //			Rectangle between points
 inline Rect rect_between_points(vec2 p1, vec2 p2, unsigned int thickness)
 {
@@ -130,15 +140,14 @@ inline Rect rect_between_points(vec2 p1, vec2 p2, unsigned int thickness)
 
 inline bool is_point_inside_rect(Polygon& p, vec2 point)
 {
-	double maxX =0, minX = 10000, maxY=0, minY=10000;
+	double maxX = 0.0, minX = 10000000.0, maxY=0.0, minY=10000000.0;
 	for (auto& edge : p.edges)
 	{
 		maxX = std::max(maxX, edge.x);
-		minX = std::min(maxX, edge.x);
+		minX = std::min(minX, edge.x);
 		maxY = std::max(maxY, edge.y);
-		minY = std::min(maxY, edge.y);
+		minY = std::min(minY, edge.y);
 	}
-	//std::cout << point.x <<" , "<< minX << " , " << point.x << " , " << maxX << " , " << point.y << " , " << minY << " , " << point.y << " , " << maxY << "\n";
 	return (point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY);
 }
 
@@ -151,8 +160,7 @@ inline bool is_circle_polygon_colliding(Circle& c, Polygon& p, bool should_separ
 {
 	bool what_to_return = false;
 	for (auto& edge : p.edges)
-	{
-		
+	{	
 		if (((edge.x - c.pos.x) * (edge.x - c.pos.x) + (edge.y - c.pos.y) * (edge.y - c.pos.y)) < c.r * c.r)
 		{
 			if (should_separate)
@@ -162,7 +170,6 @@ inline bool is_circle_polygon_colliding(Circle& c, Polygon& p, bool should_separ
 			}
 			what_to_return = true;
 		}
-			
 	}
 
 	return what_to_return;

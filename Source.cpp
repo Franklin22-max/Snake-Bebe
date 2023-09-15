@@ -22,10 +22,15 @@
 #define PI 3.141592653
 #define eulers_K 2.7182182
 
+
+
 std::string strmap =
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxE"
 "x                                                                              xE"
-"x            xxxxx                                                             xE"
+"x                                                                              xE"
+"x                                                                              xE"
+"x                 xxxxxxxxxxxxxxxxxxxxxxxxxxxx                                 xE"
+"x                                                                              xE"
 "x                                                                              xE"
 "x                                                                              xE"
 "x        x        xxxxxxxxx                  xxxxxxxxxxxxxxxxxxx               xE"
@@ -115,7 +120,7 @@ struct SnakeGame
 
 		Snake()
 		{
-			head.circle.pos = { 100,100 };
+			head.circle.pos = { 100,80 };
 			head.circle.r = 8;
 			head.dir = { 1,0 };
 		}
@@ -331,7 +336,7 @@ struct SnakeGame
 		sstream.load_sound("die", "./Sounds/eat-bad.mp3");
 		sstream.load_sound("highscore", "./Sounds/success-fanfare.mp3");
 
-		sstream.set_volume("theme1",68);
+		sstream.set_volume("theme1",80);
 		sstream.play_sound("theme1", 0);
 	}
 
@@ -672,19 +677,15 @@ struct SnakeGame
 				switch (event.key.keysym.sym)
 				{
 				case SDLK_LEFT:
-					std::cout << "Left";
 					make_a_turn({ -1 , 0 });
 					break;
 				case SDLK_RIGHT:
-					std::cout << "right";
 					make_a_turn({ 1 , 0 });
 					break;
 				case SDLK_UP:
-					std::cout << "up";
 					make_a_turn({ 0 , -1 });
 					break;
 				case SDLK_DOWN:
-					std::cout << "down";
 					make_a_turn({ 0 , 1 });
 					break;
 				case SDLK_SPACE:
