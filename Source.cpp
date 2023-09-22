@@ -135,7 +135,7 @@ struct SnakeGame
 	//						COIN
 	struct Coin
 	{
-		enum class Type { green, blue, red } type;
+		enum class Type { green, blue }type;
 		int remaing_time; // in milliseconds
 		int gain;
 		SDL_Color cl;
@@ -153,17 +153,6 @@ struct SnakeGame
 		}
 	};
 	
-	struct RedCoin : Coin
-	{
-		RedCoin()
-		{
-			type = Coin::Type::red;
-			remaing_time = 50000;
-			circle.r = 10;
-			cl = { 255,0,0,255 };
-			gain = -100;
-		}
-	};
 
 	struct BlueCoin : Coin
 	{
@@ -265,6 +254,7 @@ struct SnakeGame
 			}
 			else
 			{
+				speed = 60;
 				info->Load_text("Your Dead", { 120,20,20,255 });
 				info->center_horizontally_between(0, window_w);
 				sstream.play_sound("die", 2, 0);
@@ -391,28 +381,22 @@ struct SnakeGame
 			{
 				int random_num = rand() % 100;
 
-				// 80% chance of getting green coins
-				if (random_num <= 80)
+				// 85% chance of getting green coins
+				if (random_num <= 84)
 				{
 					auto coin = GreenCoin();
 					coin.circle.pos.x = 30 + rand() % (window_w - 60);
 					coin.circle.pos.y = 40 + rand() % (window_h - 60);
 					coins.push_back(coin);
 				}
-				else if (random_num > 80 && random_num <= 90)// 10% chance
+				else if (random_num > 85 && random_num <= 100)// 15% chance
 				{
 					auto coin = BlueCoin();
 					coin.circle.pos.x = 30 + rand() % (window_w - 60);
 					coin.circle.pos.y = 40 + rand() % (window_h - 60);
 					coins.push_back(coin);
 				}
-				else if (random_num > 90 && random_num <= 100)// 10% chance
-				{
-					auto coin = RedCoin();
-					coin.circle.pos.x = 30 + rand() % (window_w - 60);
-					coin.circle.pos.y = 40 + rand() % (window_h - 60);
-					coins.push_back(coin);
-				}
+				
 
 				// ensure coin is not colliding with any wall
 				for (auto& wall : walls)
@@ -463,17 +447,14 @@ struct SnakeGame
 			{
 				if (is_circle_circle_colliding(snake.head.circle, coin->circle))
 				{
+					speed += 1.f;
 					progess += coin->gain;
 					coin_to_remove = coin;
-					if (coin->type == Coin::Type::red)
-						change_state(STATE::stoped);
-					else
-					{
-						sstream.play_sound("eat", 1, 0);
-						// add new body segments to snakes body
-						snake.lenght += (coin->type == Coin::Type::green) ? 20 : 60;
-						my_score->Load_text("My Score: " + to_string(snake.lenght));
-					}
+					
+					sstream.play_sound("eat", 1, 0);
+					// add new body segments to snakes body
+					snake.lenght += (coin->type == Coin::Type::green) ? 20 : 60;
+					my_score->Load_text("My Score: " + to_string(snake.lenght));
 
 				}
 			}
